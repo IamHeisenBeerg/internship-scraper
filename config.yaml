@@ -51,16 +51,16 @@ extra_sources:
     fetch_description: false   # true = better topic filtering but many more requests (more blocking)
 
   - site: glassdoor
-     search_terms:
+    search_terms:
        - "stage finance"
        - "stage contrôle de gestion"
        - "finance intern"
-     locations:
+    locations:
        - "Paris, France"
        - "Lyon, France"
        - "France"
-     results_wanted: 20
-     delay_seconds: 4
+    results_wanted: 20
+    delay_seconds: 4
 
   # - site: google
   #   search_terms:
