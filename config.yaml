@@ -1,51 +1,18 @@
-# EDIT THESE: what to search for
+# ---------- 1. WHAT TO SEARCH ----------
+# Each entry is ONE Indeed search. Quotes = exact phrase, OR = any of them.
+# (Single-quoted YAML string, double quotes inside are fine.)
 search_terms:
-  - "stage contrôle de gestion"
-  - "stage FP&A"
-  - "stage analyste financier"
-  - "stage reporting financier"
-  - "stage planification financière"
-  - "stage analyse financière"
-  - "stage contrôleur de gestion"
-  - "stage contrôle budgétaire"
-  - "stage pilotage de la performance"
-  - "stage business controller"
-  - "stage financial planning and analysis"
-  - "stage reporting et KPI"
-  - "stage budget et prévisions"
-  - "stage performance financière"
-  - "stage finance d'entreprise"
-  - "stage analyste financier entreprise"
-  - "stage modélisation financière"
-  - "stage évaluation financière"
-  - "stage corporate finance"
-  - "stage financial analyst"
-  - "stage financial modelling"
-  - "stage trésorerie entreprise"
-  - "stage analyste trésorerie"
-  - "stage cash management"
-  - "stage gestion de trésorerie"
-  - "stage working capital"
-  - "stage prévisions de trésorerie"
-  - "stage automatisation reporting financier"
-  - "stage Excel VBA finance"
-  - "stage Power BI finance"
-  - "stage finance data analyst"
-  - "stage reporting financier Power BI"
-  - "stage transformation finance"
-  - "stage analyste crédit"
-  - "stage analyse des risques financiers"
-  - "stage risques bancaires"
-  - "stage audit financier"
-  - "stage analyste financier bancaire"
-  - "stage financement des entreprises"
-  - "financial controlling internship France"
-  - "FP&A intern France"
-  - "corporate finance internship France"
-  - "financial reporting internship France"
-  - "treasury analyst intern France"
-  - "finance analyst intern France"
+  - 'stage ("contrôle de gestion" OR "contrôleur de gestion" OR "contrôle budgétaire" OR "business controller")'
+  - 'stage ("FP&A" OR "financial planning" OR "planification financière" OR "budget et prévisions")'
+  - 'stage ("analyste financier" OR "analyse financière" OR "financial analyst" OR "performance financière")'
+  - 'stage ("reporting financier" OR "reporting et KPI" OR "pilotage de la performance")'
+  - 'stage ("corporate finance" OR "modélisation financière" OR "financial modelling" OR "évaluation financière")'
+  - 'stage ("trésorerie" OR "cash management" OR "working capital")'
+  - 'stage finance ("Power BI" OR "VBA" OR "automatisation reporting")'
+  - 'stage ("analyste crédit" OR "risques financiers" OR "risques bancaires" OR "audit financier" OR "financement des entreprises")'
+  - 'internship ("financial controlling" OR "FP&A" OR "corporate finance" OR "treasury" OR "financial reporting")'
 
+# ---------- 2. WHERE ----------
 locations:
   - "France"
   - "Paris, France"
@@ -57,31 +24,36 @@ locations:
   - "Nantes, France"
   - "Marseille, France"
 
-# Start with indeed. Add "linkedin" later (more likely to be rate-limited).
 sites:
   - indeed
 
-country_indeed: "france"   # country used by Indeed
-results_wanted: 30         # per search term + location
-hours_old: 72              # only postings from the last N hours
+country_indeed: "france"
+results_wanted: 30      # per search + location
+hours_old: 72           # first run: try 168 to fill the sheet, then go back to 72
 remote_only: false
+delay_seconds: 2        # pause between searches (reduces blocking)
 
-# Skip jobs whose title contains any of these (lowercase)
+# ---------- 3. FILTERS APPLIED AFTER SCRAPING ----------
+# A) The TITLE must contain at least one of these (whole words only)
+include_title_keywords:
+  - "stage"
+  - "stagiaire"
+  - "intern"
+  - "internship"
+  - "pfe"
+
+# B) Drop the job if the TITLE contains any of these (whole words/phrases)
 exclude_title_keywords:
-  - "senior"
-  - "director"
-  - "manager"
-  - "head of"
-  - "chief"
-  - "vp"
-  - "vice president"
-  - "principal"
-  - "lead"
   - "alternance"
   - "apprentissage"
+  - "apprenti"
+  - "apprentie"
   - "cdi"
   - "cdd"
   - "freelance"
+  - "senior"
+  - "director"
+  - "head of"
   - "stage de 2 mois"
   - "stage de 3 mois"
   - "stage de 4 mois"
@@ -93,5 +65,23 @@ exclude_title_keywords:
   - "développeur"
   - "développeuse"
   - "ingénieur logiciel"
+
+# C) TOPIC check: title + start of description must contain at least one of
+#    these fragments (plain substring, so "financ" matches financier/finance/financial)
+require_any_keywords:
+  - "finance"
+  - "contrôle de gestion"
+  - "controle de gestion"
+  - "contrôleur de gestion"
+  - "controlling"
+  - "controller"
+  - "fp&a"
+  - "trésorerie"
+  - "tresorerie"
+  - "treasury"
+  - "comptab"
+  - "audit"
+  - "crédit"
+  - "corporate"
 
 worksheet: "Jobs"
