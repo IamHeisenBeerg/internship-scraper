@@ -121,3 +121,29 @@ require_any_keywords:
   - "corporate"
 
 worksheet: "Jobs"
+
+# ---------- AI scoring / tailoring / Telegram / sheet (add at the END of config.yaml) ----------
+ai:
+  enabled: true
+  scoring_model: "gemini-2.5-flash-lite"   # free tier, high daily limit
+  scoring_rpm: 12                          # stay under the free per-minute cap
+  batch_size: 5                            # jobs scored per request (saves quota)
+  max_scored_per_run: 150
+  output_language: "English"               # language of "Why it fits" / "Watch-outs"
+
+tailoring:
+  enabled: true
+  model: "gemini-2.5-flash"                # better writing, lower free limits
+  min_score: 80                            # only jobs scoring at least this get a tailored CV + letter
+  max_per_run: 6
+  max_age_days: 7
+  rpm: 8
+
+notify:
+  enabled: true
+  min_score: 75                            # Telegram alert threshold
+  max_messages_per_run: 10
+  max_age_hours: 72                        # older matches are marked as seen without a message
+
+sheet:
+  sort_by_score: true                      # best scores on top after every run
