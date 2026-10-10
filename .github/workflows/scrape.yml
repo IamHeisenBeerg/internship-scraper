@@ -1,14 +1,27 @@
-name: Scrape internships
+name: Job pipeline
 
 on:
   schedule:
-    - cron: "0 6,18 * * *"   # every 8 hours (UTC)
-  workflow_dispatch:         # manual "Run workflow" button
+    - cron: "0 6,18 * * *"   # twice a day (UTC)
+  workflow_dispatch:
+
+concurrency:
+  group: job-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: write
 
 jobs:
-  scrape:
+  run:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
+    env:
+      GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+      SHEET_ID: ${{ secrets.SHEET_ID }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -16,7 +29,41 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -r requirements.txt
-      - run: python scraper.py
-        env:
-          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
-          SHEET_ID: ${{ secrets.SHEET_ID }}
+
+      - name: 1. Scrape new jobs
+        run: python scraper.py
+
+      - name: 2. Score jobs against your CV
+        if: always()
+        run: python scorer.py
+
+      - name: 3. Tailor CV + cover letter for top jobs
+        if: always()
+        run: python tailor.py
+
+      - name: 4. Telegram alerts
+        if: always()
+        run: python notify.py
+
+      - name: 5. Tidy sheet (links + sort)
+        if: always()
+        run: python finalize.py
+
+      - name: 6. Save tailored applications to the repo
+        if: always()
+        run: |
+          git config user.name "job-bot"
+          git config user.email "job-bot@users.noreply.github.com"
+          git add applications 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Add tailored applications"
+            git pull --rebase origin main || true
+            git push
+          fi
+
+      - name: Alert me if the run failed
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="${TELEGRAM_CHAT_ID}" \
+            -d text="⚠️ Job pipeline had an error: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" || true
