@@ -62,16 +62,16 @@ extra_sources:
     results_wanted: 20
     delay_seconds: 4
 
-  # - site: google
-  #   search_terms:
-  #     - "stage contrôle de gestion"
-  #     - "stage finance"
-  #     - "stage FP&A"
-  #   locations:
-  #     - "Paris, France"
-  #     - "Lyon, France"
-  #   results_wanted: 20
-  #   delay_seconds: 4
+  - site: google
+    search_terms:
+       - "stage contrôle de gestion"
+       - "stage finance"
+       - "stage FP&A"
+    locations:
+       - "Paris, France"
+       - "Lyon, France"
+    results_wanted: 20
+    delay_seconds: 4
 
 # ---------- 3. FILTERS (apply to ALL sources) ----------
 include_title_keywords:
