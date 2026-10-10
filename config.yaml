@@ -29,7 +29,7 @@ sites:
 
 country_indeed: "france"
 results_wanted: 30      # per search + location
-hours_old: 72           # first run: try 168 to fill the sheet, then go back to 72
+hours_old: 168           # first run: try 168 to fill the sheet, then go back to 72
 remote_only: false
 delay_seconds: 2        # pause between searches (reduces blocking)
 
