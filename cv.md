@@ -47,8 +47,15 @@ synthèse et un bon niveau d'anglais (C1, TOEIC 965).
 - Tools & Programming: Excel avancé, VBA, macros, PowerPoint, Word, Python, SPSS, HTML, CSS, Canva
 - Soft Skills: Analyse et synthèse, curiosité, rigueur, sens de l'organisation, autonomie, communication, esprit d'équipe
 
-## Languages
+## Langues
 - Arabe : langue maternelle
 - Français : bilingue
 - Anglais : C1 (TOEIC 965)
 - Espagnol : notions
+
+## Centres D'interet
+- Peinture numérique
+- Aïkido (4 ans)
+- musculation
+- musique
+- cinéma
