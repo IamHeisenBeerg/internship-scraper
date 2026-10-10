@@ -1,91 +1,14 @@
-"""Scrape internships (Indeed + optional LinkedIn/Glassdoor/Google) and append NEW, RELEVANT ones to a Google Sheet."""
-import hashlib
-import json
-import os
-import re
+"""Scrape internships (Indeed + optional LinkedIn/Glassdoor/Google) and append NEW, RELEVANT ones to the sheet."""
 import sys
 import time
-import unicodedata
 from collections import Counter
-from datetime import datetime, timezone
 
-import gspread
-import yaml
 from jobspy import scrape_jobs
 
-HEADERS = [
-    "job_key", "title", "company", "location", "site", "job_url",
-    "date_posted", "scraped_at", "status", "description_snippet",
-]
+from common import (Sheet, clean, load_config, loose_key, make_key, now_str, word_regex)
 
 
-# ---------- helpers ----------
-def norm(s) -> str:
-    return re.sub(r"\s+", " ", str(s or "").strip().lower())
-
-
-def make_key(company, title, location) -> str:
-    """Stored in column A. Kept identical to earlier versions so old rows still match."""
-    city = norm(location).split(",")[0]
-    raw = "|".join([norm(company), norm(title), city])
-    return hashlib.sha1(raw.encode()).hexdigest()[:16]
-
-
-def fold(s) -> str:
-    return unicodedata.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode().lower()
-
-
-def loose_key(company, title, location) -> str:
-    """Tolerant signature to catch the same job on different boards:
-    ignores accents, '(H/F)' markers, '(75)' / 'cedex' in the city, punctuation."""
-    t = fold(title)
-    t = re.sub(r"\(?\b[hfmx]\s*/\s*[hfmx](\s*/\s*[hfmx])?\b\)?", " ", t)
-    t = re.sub(r"[^a-z0-9]+", " ", t).strip()
-    c = re.sub(r"[^a-z0-9]+", " ", fold(company)).strip()
-    city = fold(location).split(",")[0]
-    city = re.sub(r"\(.*?\)", "", city)
-    city = re.sub(r"\bcedex\b", "", city)
-    city = re.sub(r"[^a-z]+", " ", city).strip()
-    return f"{c}|{t}|{city}"
-
-
-def clean(v) -> str:
-    if v is None:
-        return ""
-    s = str(v)
-    return "" if s.lower() in ("nan", "nat", "none") else s
-
-
-def word_regex(words):
-    """Whole-word matcher: 'intern' will NOT match 'international'."""
-    parts = [r"(?<!\w)" + re.escape(w.strip()) + r"(?!\w)" for w in (words or []) if w.strip()]
-    return re.compile("|".join(parts), re.IGNORECASE) if parts else None
-
-
-def load_config(path="config.yaml") -> dict:
-    with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-# ---------- Google Sheets ----------
-def open_worksheet(cfg):
-    creds = json.loads(os.environ["GCP_SERVICE_ACCOUNT_JSON"])
-    gc = gspread.service_account_from_dict(creds)
-    sh = gc.open_by_key(os.environ["SHEET_ID"])
-    name = cfg.get("worksheet", "Jobs")
-    try:
-        ws = sh.worksheet(name)
-    except gspread.WorksheetNotFound:
-        ws = sh.add_worksheet(title=name, rows=1000, cols=len(HEADERS))
-    if not ws.row_values(1):
-        ws.update(range_name="A1", values=[HEADERS])
-    return ws
-
-
-# ---------- scraping ----------
 def build_sources(cfg):
-    """Top-level search_terms/locations/sites = main source(s) (Indeed).
-    `extra_sources` in config.yaml adds LinkedIn / Glassdoor / Google, each with own settings."""
     sources = []
     for site in cfg.get("sites", ["indeed"]):
         sources.append({"site": site, "search_terms": cfg["search_terms"], "locations": cfg["locations"]})
@@ -128,7 +51,7 @@ def run_source(cfg, src):
                 fails += 1
                 print(f"[warn] {site} failed | {loc} | {term[:55]} | {e}", file=sys.stderr)
             if fails >= max_fail or empties >= max_empty:
-                print(f"[warn] {site}: stopping early (blocked or nothing found). Check the log above.", file=sys.stderr)
+                print(f"[warn] {site}: stopping early (blocked or nothing found).", file=sys.stderr)
                 return rows
             time.sleep(delay)
     return rows
@@ -141,18 +64,19 @@ def scrape(cfg):
     return rows
 
 
-# ---------- main ----------
 def main():
     cfg = load_config()
     include_re = word_regex(cfg.get("include_title_keywords"))
     exclude_re = word_regex(cfg.get("exclude_title_keywords"))
     topic = [k.lower() for k in cfg.get("require_any_keywords", [])]
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
+    now = now_str()
 
-    ws = open_worksheet(cfg)
-    existing = ws.get_all_values()[1:]  # skip header
-    seen = {r[0] for r in existing if r and r[0]}
-    seen_loose = {loose_key(r[2], r[1], r[3]) for r in existing if len(r) > 3}
+    sheet = Sheet(cfg)
+    sheet.ensure(["job_key", "title", "company", "location", "site", "job_url", "date_posted",
+                  "scraped_at", "description", "link"])
+    seen = {sheet.get(r, "job_key") for r in sheet.rows if sheet.get(r, "job_key")}
+    seen_loose = {loose_key(sheet.get(r, "company"), sheet.get(r, "title"), sheet.get(r, "location"))
+                  for r in sheet.rows if sheet.get(r, "title")}
     print(f"[info] {len(seen)} jobs already in sheet")
 
     stats = Counter()
@@ -182,14 +106,16 @@ def main():
         seen_loose.add(lk)
         site = clean(r.get("site"))
         stats[f"ADDED from {site}"] += 1
-        new_rows.append([
-            key, title, company, clean(r.get("location")), site,
-            clean(r.get("job_url")), clean(r.get("date_posted")), now, "",
-            desc[:300].replace("\n", " "),
-        ])
+        new_rows.append({
+            "job_key": key, "title": title, "company": company,
+            "location": clean(r.get("location")), "site": site,
+            "job_url": clean(r.get("job_url")), "date_posted": clean(r.get("date_posted")),
+            "scraped_at": now, "description": desc[:4000],
+        })
 
     if new_rows:
-        ws.append_rows(new_rows, value_input_option="RAW")
+        sheet.append(new_rows)
+    sheet.fill_links()
 
     print("---- summary ----")
     for k, v in stats.items():
