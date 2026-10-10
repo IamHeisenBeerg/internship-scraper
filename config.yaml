@@ -1,6 +1,4 @@
-# ---------- 1. WHAT TO SEARCH ----------
-# Each entry is ONE Indeed search. Quotes = exact phrase, OR = any of them.
-# (Single-quoted YAML string, double quotes inside are fine.)
+# ---------- 1. MAIN SOURCE (Indeed) ----------
 search_terms:
   - 'stage ("contrôle de gestion" OR "contrôleur de gestion" OR "contrôle budgétaire" OR "business controller")'
   - 'stage ("FP&A" OR "financial planning" OR "planification financière" OR "budget et prévisions")'
@@ -12,7 +10,6 @@ search_terms:
   - 'stage ("analyste crédit" OR "risques financiers" OR "risques bancaires" OR "audit financier" OR "financement des entreprises")'
   - 'internship ("financial controlling" OR "FP&A" OR "corporate finance" OR "treasury" OR "financial reporting")'
 
-# ---------- 2. WHERE ----------
 locations:
   - "France"
   - "Paris, France"
@@ -28,13 +25,55 @@ sites:
   - indeed
 
 country_indeed: "france"
-results_wanted: 30      # per search + location
-hours_old: 72           # first run: try 168 to fill the sheet, then go back to 72
+results_wanted: 30
+hours_old: 72
 remote_only: false
-delay_seconds: 2        # pause between searches (reduces blocking)
+delay_seconds: 2
 
-# ---------- 3. FILTERS APPLIED AFTER SCRAPING ----------
-# A) The TITLE must contain at least one of these (whole words only)
+# ---------- 2. EXTRA SOURCES ----------
+# Enable ONE at a time (remove the leading "# " on its lines), run, check the log, then the next.
+# These use SIMPLE search terms (no OR / quotes), because only Indeed is known to handle operators.
+extra_sources:
+  - site: linkedin
+    search_terms:
+      - "stage contrôle de gestion"
+      - "stage finance"
+      - "stage FP&A"
+      - "stage trésorerie"
+      - "stage analyste financier"
+      - "finance intern"
+    locations:
+      - "Paris, France"
+      - "Lyon, France"
+      - "France"
+    results_wanted: 20
+    delay_seconds: 6
+    fetch_description: false   # true = better topic filtering but many more requests (more blocking)
+
+  # - site: glassdoor
+  #   search_terms:
+  #     - "stage finance"
+  #     - "stage contrôle de gestion"
+  #     - "finance intern"
+  #   locations:
+  #     - "Paris, France"
+  #     - "Lyon, France"
+  #     - "France"
+  #   results_wanted: 20
+  #   delay_seconds: 4
+
+  # - site: google
+  #   search_terms:
+  #     - "stage contrôle de gestion"
+  #     - "stage finance"
+  #     - "stage FP&A"
+  #   locations:
+  #     - "Paris, France"
+  #     - "Lyon, France"
+  #   results_wanted: 20
+  #   delay_seconds: 4
+
+# ---------- 3. FILTERS (apply to ALL sources) ----------
 include_title_keywords:
   - "stage"
   - "stagiaire"
@@ -42,7 +81,6 @@ include_title_keywords:
   - "internship"
   - "pfe"
 
-# B) Drop the job if the TITLE contains any of these (whole words/phrases)
 exclude_title_keywords:
   - "alternance"
   - "apprentissage"
@@ -66,10 +104,8 @@ exclude_title_keywords:
   - "développeuse"
   - "ingénieur logiciel"
 
-# C) TOPIC check: title + start of description must contain at least one of
-#    these fragments (plain substring, so "financ" matches financier/finance/financial)
 require_any_keywords:
-  - "finance"
+  - "financ"
   - "contrôle de gestion"
   - "controle de gestion"
   - "contrôleur de gestion"
