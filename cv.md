@@ -1,13 +1,13 @@
 # Oussama KRIDA
 [Email] | [Phone] | [City, Country] | [LinkedIn]
 
-## Education
-- Clermont School of Business — Master Grande École, Ingénierie financière et innovation en finance (2025–2027, en cours)
-  - Modules: Analyse financière, contrôle de gestion, finance internationale, finance digitale
-- ENCG Agadir — Diplôme des Écoles Nationales de Commerce et de Gestion, spécialisation Finance (2022–2027, en cours)
-  - Modules: Comptabilité générale et des sociétés, fiscalité, analyse et diagnostic financier, gestion budgétaire, gestion de trésorerie
+## Profil
+- Étudiant en Master Grande École à Clermont School of Business (ingénierie financière & innovation en finance), je recherche u n
+stage de 6 mois dès janvier 2027 en finance d'entreprise (contrôle de gestion, FP&A, reporting, analyse financière). J'aime
+travailler sur les données et je suis à l'aise sur Excel (VBA). Curieux, rigoureux et organisé, avec un bon esprit d'analyse et de
+synthèse et un bon niveau d'anglais (C1, TOEIC 965).
 
-## Experience
+## Experience Professionnelle
 ### SOREMED — Agadir, Maroc | Assistant Analyste Financier (06/2026–08/2026)
 - Suivi et analyse des coûts d'une dizaine de centres de coûts pour identifier des pistes d'amélioration de la rentabilité
 - Préparation de reportings mensuels et de tableaux de bord Excel pour les équipes et la direction
@@ -30,13 +30,19 @@
 - Préparation de balances et d'états financiers, correction d'écarts
 - Rapprochement de relevés bancaires et pointage des comptes clients et fournisseurs
 
-## Projects
+## Experience Associative
 ### Rénovation et Soutien Éducatif — Action associative, ENCG Agadir (04/2025)
 - Gestion financière et logistique de 3 stands solidaires ayant permis de collecter 1 100 €
 - Création d'un outil de suivi de trésorerie pour mieux contrôler les dépenses et réduire les coûts superflus
 - Suivi des fonds collectés et des dépenses liées au projet associatif et participation à l'organisation de l'événement de clôture
 
-## Skills
+## Formation
+- Clermont School of Business — Master Grande École, Ingénierie financière et innovation en finance (2025–2027, en cours)
+  - Modules: Analyse financière, contrôle de gestion, finance internationale, finance digitale
+- ENCG Agadir — Diplôme des Écoles Nationales de Commerce et de Gestion, spécialisation Finance (2022–2027, en cours)
+  - Modules: Comptabilité générale et des sociétés, fiscalité, analyse et diagnostic financier, gestion budgétaire, gestion de trésorerie
+
+## Competence
 - Finance: Contrôle de gestion, FP&A, analyse financière, budgets et prévisions, valorisation, analyse de données, reporting et KPI
 - Tools & Programming: Excel avancé, VBA, macros, PowerPoint, Word, Python, SPSS, HTML, CSS, Canva
 - Soft Skills: Analyse et synthèse, curiosité, rigueur, sens de l'organisation, autonomie, communication, esprit d'équipe
