@@ -1,0 +1,26 @@
+# EDIT THESE: what to search for
+search_terms:
+  - "data science intern"
+  - "machine learning intern"
+  - "software engineer intern"
+
+locations:
+  - "Paris, France"
+  - "Remote"
+
+# Start with indeed. Add "linkedin" later (more likely to be rate-limited).
+sites:
+  - indeed
+
+country_indeed: "france"   # country used by Indeed
+results_wanted: 30         # per search term + location
+hours_old: 72              # only postings from the last N hours
+remote_only: false
+
+# Skip jobs whose title contains any of these (lowercase)
+exclude_title_keywords:
+  - "senior"
+  - "director"
+  - "manager"
+
+worksheet: "Jobs"
