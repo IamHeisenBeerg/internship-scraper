@@ -2,13 +2,13 @@ name: Scrape internships
 
 on:
   schedule:
-    - cron: "0 */8 * * *"   # every 8 hours (UTC)
+    - cron: "0 6,18 * * *"   # every 8 hours (UTC)
   workflow_dispatch:         # manual "Run workflow" button
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
