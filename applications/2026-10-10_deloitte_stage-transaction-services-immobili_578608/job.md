@@ -1,13 +1,12 @@
 # Stage Transaction Services Immobilier F/H - Deloitte
 
 - Score: 95/100
-- Why it fits: Perfect match: 6-month internship starting Jan 2027 in a top-tier firm, aligning with candidate's finance background and desire for financial analysis/due diligence.
+- Why it fits: Perfect match: Big 4, Transaction Services, aligns with Master level, 6-month duration, and January 2027 start date in Paris.
 - Watch-outs: 
 - Offer: https://fr.indeed.com/viewjob?jk=8f44a15f0bfe771a
 
 ## AI notes (read before sending!)
 
-- **Éléments mis en valeur :** Compétences en analyse financière, comptabilité, modélisation Excel/VBA et analyse d'écarts parfaitement alignées avec la due diligence financière du poste SRT Real Estate.
-- **GAPS (Inquiétudes/Manques) :** Aucune expérience préalable spécifique au secteur immobilier (Real Estate), mais l'offre précise explicitement que ce n'est pas obligatoire si l'appétence pour le secteur est forte.
-- **GAPS (Audit) :** Pas d'expérience directe en cabinet d'audit Big 4 (seulement en cabinet comptable/fidu et audit interne bancaire), l'accent a donc été mis sur la due diligence comptable et la révision d'états financiers.
-- **À vérifier avant envoi :** S'assurer de la cohérence des dates de disponibilité (janvier 2027) et mettre à jour les coordonnées exactes en en-tête ([Email], [Phone], [City, Country]).
+- **Mises en avant** : Solides compétences en analyse financière, comptabilité, modélisation/automatisation Excel/VBA, et maîtrise de l'anglais (TOEIC 965).
+- **GAPS** : Le candidat n'a pas d'expérience préalable directe dans le secteur immobilier ni en cabinet d'audit majeur, mais l'offre précise qu'une expérience en immobilier n'est pas obligatoire si l'appétence pour le secteur est forte.
+- **À vérifier** : Remplacer les placeholders [City, Country], [Date] et les coordonnées en en-tête avant l'envoi.
